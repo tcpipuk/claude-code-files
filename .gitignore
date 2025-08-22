@@ -1,0 +1,18 @@
+# Ignore everything by default
+/*
+
+# But explicitly track these items
+!agents/
+!commands/
+!docs/
+!CLAUDE.md
+!README.md
+!LICENSE
+!.gitignore
+!.markdownlint.yaml
+!.pre-commit-config.yaml
+
+# Ensure we track everything inside agents, commands, and docs
+!agents/**
+!commands/**
+!docs/**
