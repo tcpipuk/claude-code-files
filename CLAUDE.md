@@ -1,9 +1,9 @@
-# Global Instructions for Claude
+# Global instructions for Claude
 
 Essential guidance for working with projects on this machine. Tom can update it to improve
 workflow and content style preferences.
 
-## User Context
+## User context
 
 - **Name**: Tom Foster
 - **Focus**: Clean, professional code that's easy to read and maintain
@@ -11,9 +11,9 @@ workflow and content style preferences.
   snarky when making a point
 - **Decision-making**: Present trade-offs honestly - hacky vs best practice
 
-## Working Philosophy
+## Working philosophy
 
-### Communication & Workflow
+### Communication and workflow
 
 **Problem-solving approach**: Understand → Analyse → Propose → Execute
 
@@ -35,13 +35,13 @@ workflow and content style preferences.
 - Create local commits regularly to checkpoint progress (if in a repo)
 - If something fails repeatedly, stop and ask rather than retrying endlessly
 
-### Solution Trade-offs
+### Solution trade-offs
 
 - Present options when there's a meaningful choice: "quick hack" vs "proper solution"
 - Be honest about pros/cons: maintainability, performance, technical debt
 - Default to best practice, but explain when cutting corners makes sense
 
-### Code Quality
+### Code quality
 
 - Code should always follow KISS, DRY, SOLID, and YAGNI principles
 - Prefer composition over inheritance, use dependency injection
@@ -50,13 +50,13 @@ workflow and content style preferences.
 - **Always leave the codebase cleaner than you found it** - Remove dead code, fix warnings,
   improve documentation as you work
 
-### Problem-Solving & Tool Usage
+### Problem-solving and tool usage
 
 - **Root cause analysis**: Focus on identifying underlying causes rather than superficial
   workarounds
 - **Edit tool precision**: When using Edit/Replace tools, ensure `old_string` matches exactly
   including whitespace - verify the outcome immediately
-- **Stuck/Repeated Failures**: If a tool call fails twice or you're unsure how to proceed, stop and
+- **Stuck/repeated failures**: If a tool call fails twice or you're unsure how to proceed, stop and
   explain the situation
 - **Ambiguity**: If a request requires significant interpretation, clarify before taking action
 - **Command timeouts**: Use timeouts on commands that might hang - `timeout 30s curl` or
@@ -64,7 +64,7 @@ workflow and content style preferences.
 - **Avoid over-piping**: Complex pipe chains lose all output on failure - save intermediates to
   `./tmp/` instead
 
-### Task Management with TodoWrite
+### Task management with TodoWrite
 
 **Critical for context retention**: The TodoWrite tool is essential - conversation history gets
 auto-compacted, so todos are your reliable memory across sessions. Use it to:
@@ -74,7 +74,7 @@ auto-compacted, so todos are your reliable memory across sessions. Use it to:
 - Maintain clear progress records: "Tick, that's done - onto the next job!"
 - **Add issues found during linting/testing and work through systematically**
 
-**Resuming Tasks After Tangents**: If the conversation shifts to a new topic or task, do not
+**Resuming tasks after tangents**: If the conversation shifts to a new topic or task, do not
 automatically resume the previous task. Instead, explicitly ask the user if they are ready to
 continue the prior work or if they have new instructions.
 
@@ -100,57 +100,58 @@ continue the prior work or if they have new instructions.
 > If the implementation is easy to explain, it may be a good idea.
 > Namespaces are one honking great idea -- let's do more of those!
 
-## Code Organisation and Standards
+## Documentation and code standards
 
-### Package Structure
+### Language and style
 
+- **UK English** orthography throughout (documentation, comments, variable names)
+- **UK GDS** standards for language and style
+- Use "e.g." instead of "e.g.," - avoid overly pedantic punctuation
+- Documentation should be approachable but include relevant technical detail
+
+### Code organisation
+
+**Package structure**:
 - Create clean, organised modules with logical submodules
 - Pattern: `package/submodule/specific_module.py`
 - Break modules exceeding ~500 lines or with multiple responsibilities
 - Each module should have a single, clear purpose
 
-## Language and Documentation Standards
-
-### Style Requirements
-
-- **UK English** orthography throughout (documentation, comments, variable names)
-- **UK GDS** standards for language and style
-- Use "e.g." instead of "e.g.," - avoid overly pedantic punctuation
-
-### Content Approach
-
-- Documentation should be approachable but include relevant technical detail
-- Don't remove context that users will find important
-- When unclear about accessibility vs technical depth, check with user
-
-### Docstrings (Google Style)
-
-- All public modules, classes, and functions must have Google-style docstrings
+**Docstrings** (Google style):
+- All public modules, classes, and functions must have docstrings
 - Format: 3-5 line paragraphs describing purpose and behaviour
-- Only add more detail for important business logic or project context
 - **Never include Args sections** - parameters are self-documenting via type hints
 - Include Returns/Raises/Yields only when method directly performs these actions
 
-### Markdown Standards
+### Markdown documentation
 
+**Structure**:
 - Follow markdownlint standards
 - Line-wrap at 100 characters (except tables and code blocks)
+- Use sentence case for all headings: "Getting started" not "Getting Started"
+- Maximum 3 heading levels (# ## ###) - use **bold text** for emphasis beyond that
+- Don't number headings (### 1. Thing) - just use ### Thing
+
+**Organisation**:
+- Follow KISS and DRY principles - consolidate repeated content and link to it
 - Keep README.md tidy with links to detailed documentation in `./docs/`
-- Store extensive documentation, architecture guides, and API references in `./docs/`
+- Store extensive documentation in `./docs/` rather than cluttering README
+- Prefer flat structure over deep hierarchies
+- Remove redundant navigation sections if they duplicate other content
 
-## Git and Version Control
+## Git and version control
 
-### Commit Messages
+### Commit messages
 
 - Focus on **purpose and impact**, not mechanical changes
 - Describe what the commit achieves: "Add retry logic to prevent API timeout failures"
 - Not just what changed: "Modified api_client.py and added retry function"
-- **NO attribution**: Never include "Generated with Claude", "Co-Authored-By", emojis, or similar
+- **No attribution**: Never include "Generated with Claude", "Co-Authored-By", emojis, or similar
 - Pre-commit hooks: Only mention if they revealed actual issues worth noting (not just whitespace)
 
-## Quality Assurance
+## Quality assurance
 
-### Pre-commit Checks
+### Pre-commit checks
 
 - **Preferred**: Use prek for pre-commit checks: `uvx prek run --all-files`
 - When running linting/type checking, add issues to TodoWrite and work through systematically
@@ -172,9 +173,9 @@ Slash commands like `/truenas-mode` that add instructions to your current conver
 specialist modes, enable interactive workflows, or guide specific tasks. Run in main context,
 allowing user interaction and clarification throughout.
 
-## Testing Standards
+## Testing standards
 
-### Pytest Conventions
+### Pytest conventions
 
 Never use plain `assert` statements in tests. Always use pytest's assertion methods:
 
@@ -183,9 +184,9 @@ Never use plain `assert` statements in tests. Always use pytest's assertion meth
 - `pytest.approx()` for floating-point comparisons
 - `pytest.mark.parametrize()` for parametrised tests
 
-## Working Directories
+## Working directories
 
-### Local Investigation Directory
+### Local investigation directory
 
 For temporary files, external repository clones, or other investigative purposes, use the `./tmp/`
 directory. This directory is typically ignored by Git and will not be included in commits.
