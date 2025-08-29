@@ -78,41 +78,61 @@ Help me with tasks like:
 - Migrating between app catalogs
 - Backup and disaster recovery
 
-### Updating Custom App YAML Configuration
+## Critical Service Recovery
 
-Safe process for modifying custom app compose configs:
+### Docker Service Issues
 
-1. **Export current config** (returns JSON format):
+When Docker fails to start or containers won't run:
 
-   ```bash
-   mkdir -p ./tmp
-   midclt call app.config "app_name" > ./tmp/app-config-backup.json
-   ```
+```bash
+# Check Docker status and recent logs
+systemctl status docker
+journalctl -xeu docker.service -n 50
 
-2. **Convert to YAML for editing**:
+# Common fixes:
+systemctl restart docker              # Basic restart
+systemctl reset-failed docker.service # Clear start-limit-hit
+ip route | grep default               # Verify default route exists
 
-   ```bash
-   python3 -c "import json, yaml, sys; print(yaml.dump(json.load(sys.stdin)))" \
-     < ./tmp/app-config-backup.json > ./tmp/app-compose.yaml
-   ```
+# Docker needs default route - if missing after network changes:
+# See ~/scripts/network/ for network recovery scripts
+```
 
-3. **Edit YAML** (e.g., update image tags to `:latest`)
+### Middleware/Apps Pool Issues
 
-4. **Prepare update payload** (YAML as string in JSON):
+When apps won't start or show `[Errno 2] No such file or directory: '/mnt/.ix-apps/app_configs'`:
 
-   ```bash
-   midclt call app.update "app_name" \
-     "{\"custom_compose_config_string\": \"$(cat ./tmp/app-compose.yaml)\"}"
-   ```
+```bash
+# Quick fix to allow pool reset in UI
+mkdir -p /mnt/.ix-apps/app_configs
 
-5. **Monitor deployment**:
+# Then in TrueNAS UI: Apps → Settings → Unset Pool → Re-select pool
 
-   ```bash
-   midclt call app.query | jq '.[] | select(.name == "app_name") | .state'
-   ```
+# Verify proper ZFS mount structure
+mount | grep ix-apps  # Should show multiple datasets
 
-**Note**: TrueNAS outputs config as JSON but expects updates as YAML string. Always backup before
-changes and verify deployment completes successfully.
+# Restart middleware if apps still won't load
+systemctl restart middlewared
+```
+
+### Network Issues
+
+For network configuration issues (driver, MAC address, routing):
+
+- See `~/docs/network-*.md` for detailed documentation
+- Use scripts in `~/scripts/network/` for common fixes
+- Check `~/docs/network-quick-reference.md` for essential commands
+
+### App Management
+
+For detailed app management procedures including:
+
+- Updating custom app YAML configurations
+- Resource limit management
+- Backup and restore procedures
+- Troubleshooting app issues
+
+See `~/docs/apps-management.md`
 
 ## Confirmation
 
