@@ -112,12 +112,14 @@ continue the prior work or if they have new instructions.
 ### Code organisation
 
 **Package structure**:
+
 - Create clean, organised modules with logical submodules
 - Pattern: `package/submodule/specific_module.py`
 - Break modules exceeding ~500 lines or with multiple responsibilities
 - Each module should have a single, clear purpose
 
 **Docstrings** (Google style):
+
 - All public modules, classes, and functions must have docstrings
 - Format: 3-5 line paragraphs describing purpose and behaviour
 - **Never include Args sections** - parameters are self-documenting via type hints
@@ -126,6 +128,7 @@ continue the prior work or if they have new instructions.
 ### Markdown documentation
 
 **Structure**:
+
 - Follow markdownlint standards
 - Line-wrap at 100 characters (except tables and code blocks)
 - Use sentence case for all headings: "Getting started" not "Getting Started"
@@ -133,6 +136,7 @@ continue the prior work or if they have new instructions.
 - Don't number headings (### 1. Thing) - just use ### Thing
 
 **Organisation**:
+
 - Follow KISS and DRY principles - consolidate repeated content and link to it
 - Keep README.md tidy with links to detailed documentation in `./docs/`
 - Store extensive documentation in `./docs/` rather than cluttering README

@@ -1,80 +1,68 @@
-# 📦 Setup Guide
+# 📦 Setup guide
 
 Complete setup instructions for Claude Code Files repository.
 
 ## Prerequisites
 
-- Git installed on your system
-- A Git hosting account (GitHub, GitLab, etc.)
-- Claude Code CLI installed
+You'll need Git installed on your system, a Git hosting account (GitHub, GitLab, etc.), and Claude
+Code CLI installed.
 
-## For New Users
+## New users
 
-If you're setting up Claude Code for the first time:
+If you're setting up Claude Code for the first time, you have two options:
 
-### 1. Fork the Repository
+**Option 1: Fork to your own repository** (recommended for ongoing customisation)
 
-First, fork the [claude-code-files repository](https://github.com/your-org/claude-code-files) to
-your own Git account. This allows you to:
-
-- Customise configurations without affecting the original
-- Pull updates from upstream when needed
-- Push your personal preferences
-
-### 2. Clone to ~/.claude
+Clone the template from the [claude-code-files repository](https://git.tomfos.tr/tom/claude-code-files)
+and push it to your own Git hosting:
 
 ```bash
-git clone ssh://git@github.com/your-username/claude-code-files.git ~/.claude
+# Clone the template
+git clone https://git.tomfos.tr/tom/claude-code-files.git ~/.claude
+cd ~/.claude
+
+# Add your own repository as origin
+git remote remove origin
+git remote add origin https://github.com/your-username/claude-code-files.git
+git push -u origin main
 ```
 
-Or if using HTTPS:
+This lets you track your customisations, share configurations across machines, and pull updates
+from the original template when needed.
+
+**Option 2: Direct clone** (simpler, but no version control of your changes)
 
 ```bash
-git clone https://github.com/your-username/claude-code-files.git ~/.claude
+git clone https://git.tomfos.tr/tom/claude-code-files.git ~/.claude
 ```
 
-### 3. Customise CLAUDE.md
+With either option, edit `~/.claude/CLAUDE.md` to include your personal preferences, coding
+standards, and any project-specific instructions. Once that's done, you're ready to go! Claude Code
+will automatically detect and use your configurations.
 
-Edit `~/.claude/CLAUDE.md` to include your personal preferences, coding standards, and any
-project-specific instructions.
+## Existing users
 
-### 4. Start Claude Code
+If you're already using Claude Code with existing configurations, you can migrate to this system
+whilst preserving your setup and gaining version control.
 
-You're ready to go! Claude Code will automatically detect and use your configurations.
-
-## For Existing Claude Code Users
-
-If you're already using Claude Code with existing configurations, follow these migration steps to
-preserve your setup whilst gaining version control:
-
-### 1. Quit Claude Code
-
-Ensure Claude Code is completely closed before starting the migration.
-
-### 2. Backup Existing Configuration
+First, make sure Claude Code is completely closed, then backup your existing configuration:
 
 ```bash
 mv ~/.claude ~/backup_claude
 ```
 
-This preserves all your existing agents, commands, and settings.
-
-### 3. Clone Your Fork
+This preserves all your existing agents, commands, and settings. Now clone your fork:
 
 ```bash
-git clone ssh://git@github.com/your-username/claude-code-files.git ~/.claude
+git clone https://your-git-host.com/your-username/claude-code-files.git ~/.claude
 ```
 
-### 4. Preserve Repository's CLAUDE.md
-
-The repository comes with a template CLAUDE.md. Save it for reference:
+The repository comes with a template CLAUDE.md that you might want to reference later, so save it:
 
 ```bash
 cd ~/.claude
 mv CLAUDE.md backup_CLAUDE.md
 ```
-
-### 5. Restore Your Configurations
 
 Copy all your existing configurations back:
 
@@ -82,20 +70,9 @@ Copy all your existing configurations back:
 cp -r ~/backup_claude/* ~/.claude/
 ```
 
-### 6. Merge CLAUDE.md Files
-
-You now have two CLAUDE.md files:
-
-- `CLAUDE.md` - Your existing personalised version
-- `backup_CLAUDE.md` - The repository's template
-
-Review both and merge the best parts:
-
-1. Open both files in your editor
-2. Incorporate useful sections from the template into your version
-3. Remove the backup: `rm backup_CLAUDE.md`
-
-### 7. Review Changes
+Now you have two CLAUDE.md files - your existing personalised version and the repository's template
+(saved as `backup_CLAUDE.md`). Open both files in your editor and incorporate any useful sections
+from the template into your version. When you're done, remove the backup with `rm backup_CLAUDE.md`.
 
 Check what needs to be committed:
 
@@ -103,14 +80,8 @@ Check what needs to be committed:
 git status
 ```
 
-You'll see:
-
-- Modified `CLAUDE.md` (your personalised version)
-- New files in `agents/` (your custom agents)
-- New files in `commands/` (your custom commands)
-- Other Claude Code files (ignored by `.gitignore`)
-
-### 8. Commit Your Configuration
+You'll see your modified `CLAUDE.md`, new files in `agents/` and `commands/` directories, and other
+Claude Code files that are ignored by `.gitignore`. Commit your configuration:
 
 ```bash
 git add agents/*.md commands/*.md CLAUDE.md
@@ -118,38 +89,31 @@ git commit -m "Add my existing Claude Code configurations"
 git push origin main
 ```
 
-### 9. Clean Up
-
-Once you've verified everything works:
+Once you've verified everything works, clean up the backup:
 
 ```bash
 rm -rf ~/backup_claude
 ```
 
-### 10. Start Claude Code
-
 Your configurations are now version controlled and ready to use!
 
-## Syncing Across Machines
+## Syncing across machines
 
-Once your configurations are in Git, you can easily sync them across multiple machines:
-
-### On a New Machine
+Once your configurations are in Git, you can easily sync them across multiple machines. On a new
+machine, simply clone your fork:
 
 ```bash
-git clone ssh://git@github.com/your-username/claude-code-files.git ~/.claude
+git clone https://your-git-host.com/your-username/claude-code-files.git ~/.claude
 ```
 
-### Pulling Updates
+To pull updates from your other machines:
 
 ```bash
 cd ~/.claude
 git pull
 ```
 
-### Pushing Changes
-
-After modifying configurations:
+After modifying configurations on any machine:
 
 ```bash
 cd ~/.claude
@@ -158,18 +122,17 @@ git commit -m "Update configurations"
 git push
 ```
 
-## Updating from Upstream
+## Updating from upstream
 
-If the original repository has useful updates:
-
-### Add Upstream Remote (once)
+If the original repository has useful updates, you can pull them into your fork. Add the upstream
+remote (you only need to do this once):
 
 ```bash
 cd ~/.claude
-git remote add upstream https://github.com/original-org/claude-code-files.git
+git remote add upstream https://git.tomfos.tr/tom/claude-code-files.git
 ```
 
-### Pull Updates
+Then pull and merge updates:
 
 ```bash
 git fetch upstream
@@ -184,60 +147,32 @@ git push origin main
 
 ## Troubleshooting
 
-### Permission Issues
+**Permission issues**: If you get permission denied errors, make sure you're using the correct Git
+URL (SSH vs HTTPS), check your SSH keys are properly configured, and verify you have push access to
+your fork.
 
-If you get permission denied errors:
+**Missing configurations**: If Claude Code doesn't detect your configurations, verify files are in
+the correct directories (`~/.claude/agents/`, `~/.claude/commands/`), check file extensions are
+`.md`, and ensure YAML frontmatter is properly formatted in agent files.
 
-- Ensure you're using the correct Git URL (SSH vs HTTPS)
-- Check your SSH keys are properly configured
-- Verify you have push access to your fork
+**Git conflicts**: When merging from upstream, review conflicts carefully, keep your customisations
+when in doubt, test configurations after resolving, and commit the resolution.
 
-### Missing Configurations
+## Usage examples
 
-If Claude Code doesn't detect your configurations:
+Once your configurations are set up, here are some common usage patterns.
 
-- Verify files are in the correct directories (`~/.claude/agents/`, `~/.claude/commands/`)
-- Check file extensions are `.md`
-- Ensure YAML frontmatter is properly formatted in agent files
+When you want to use an agent:
 
-### Git Conflicts
-
-When merging from upstream:
-
-1. Review conflicts carefully
-2. Keep your customisations when in doubt
-3. Test configurations after resolving
-4. Commit the resolution
-
-## Advanced Setup
-
-### Using Different Branches
-
-Maintain different configurations for different contexts:
-
-```bash
-git checkout -b work-config
-# Make work-specific changes
-git commit -am "Add work configurations"
-
-git checkout -b personal-config
-# Make personal changes
-git commit -am "Add personal configurations"
+```plain
+User: "I've finished implementing the new authentication module. Can you make sure it's ready for CI?"
+Assistant: "I'll use the python-ci-readiness agent to run through the complete quality assurance process."
+[Agent runs pytest, mypy, ruff check, and ruff format, fixing issues along the way]
 ```
 
-Switch between them:
+When you want to activate a command:
 
-```bash
-git checkout work-config  # When at work
-git checkout personal-config  # When on personal projects
+```plain
+User: /write-docs
+Assistant: Documentation mode activated. I'll focus on creating comprehensive, well-structured documentation.
 ```
-
-### Sharing Team Configurations
-
-Teams can maintain a shared fork:
-
-1. Create a team organisation on your Git host
-2. Fork the repository to the team org
-3. Add team members as collaborators
-4. Maintain team standards in the shared fork
-5. Individual members can fork from the team fork for personal customisations

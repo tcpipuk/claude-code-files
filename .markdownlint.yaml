@@ -13,7 +13,7 @@ MD013:
   code_blocks: false
   line_length: 100
   headings: false
-  stern: true
+  stern: false
   tables: false
 
 # Allow dollar signs in code blocks (for shell prompts)

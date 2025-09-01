@@ -1,15 +1,18 @@
-# ✨ Writing Agents and Commands
+# ✨ Writing agents and commands
 
 Best practices and guidelines for creating effective Claude Code agents and custom commands.
 
-## Writing Agents
+## Agent fundamentals
 
-Agents are specialised AI workers that handle complex, multi-step tasks autonomously. Each agent
-should excel at a specific domain.
+Agents are specialised AI workers that handle complex, multi-step tasks on their own. Think of them
+as expert consultants who can work independently on specific problems whilst you focus on other
+things. Each agent should be really good at one particular area rather than being a Swiss Army knife
+that tries to do everything poorly.
 
-### Agent Structure
+### Agent file structure
 
-Every agent requires a Markdown file with YAML frontmatter:
+Every agent requires a Markdown file with YAML frontmatter that defines its capabilities and
+configuration:
 
 ```yaml
 ---
@@ -25,145 +28,79 @@ color: blue   # visual identifier in UI
 Detailed instructions for the agent's behaviour and methodology...
 ```
 
-### Design Principles
+### Model selection
 
-#### 1. Single Responsibility
+Choosing the right model matters for both speed and cost. Haiku is great at clear-cut, well-defined
+tasks like code formatting, simple find-and-replace operations, running test suites, and checking if
+code follows the rules. It's fast and lightweight, making it perfect for repetitive work.
 
-Each agent should excel at ONE type of task. Don't create Swiss Army knife agents.
+Opus, on the other hand, is what you need when the work requires real thinking. Use it for
+architectural decisions, complex refactoring that needs understanding of business logic, debugging
+tricky issues, and any task that involves making judgement calls about code quality or design
+patterns.
 
-**Good Example:**
+For complex workflows, try a mixed approach where Opus handles the overall strategy whilst Haiku
+does the repetitive work. For example, Opus might look at the architecture and plan a refactoring
+approach, then Haiku applies formatting to all files and updates import statements, before Opus
+checks that the logic has been kept intact.
 
-- `python-ci-readiness` - Prepares Python code for CI/CD
-- `docstring-auditor` - Fixes Python docstrings for compliance
-- `test-coverage-analyst` - Analyses test coverage gaps
+### Tool selection
 
-**Bad Example:**
+Think carefully about which tools your agent actually needs. A simple formatting agent might only
+need Read, Edit, and MultiEdit tools, whilst a big refactoring agent needs the full toolkit
+including Glob, Grep, and TodoWrite for complex searches and keeping track of progress. Including
+extra tools doesn't break anything, but it can make the agent's purpose less clear to users.
 
-- `python-everything` - Does linting, testing, documentation, and deployment
+## Writing effective agents
 
-#### 2. Clear Activation Triggers
+### Core principles
 
-Include examples showing when the agent should be used:
+A good agent does one thing well. Each agent should be really good at one specific type of task
+rather than trying to be everything to everyone. Instead of creating a "python-everything" agent
+that handles linting, testing, documentation, and deployment, build focused agents like
+"python-ci-readiness", "docstring-auditor", and "test-coverage-analyst" that can work together but
+each have clear, different purposes.
 
-```markdown
-Use this agent when:
-- You've finished implementing a feature and need QA
-- The test suite is failing with type errors
-- You want to ensure code meets team standards
+Users need to understand when to use your agent, so give clear examples of when it makes sense.
+Explain scenarios like "You've finished building a feature and need quality checks" or "The test
+suite is failing with type errors", and include example prompts that would naturally trigger the
+agent, such as "Check my code is ready for CI" or "Fix all the type errors".
 
-Example prompts that trigger this agent:
-- "Check my code is ready for CI"
-- "Fix all the type errors"
-- "Make sure this follows our standards"
-```
+Documentation matters for complex agents. Give detailed, step-by-step instructions that explain not
+just what the agent will do, but how it goes about the work. Break down the approach into clear
+steps, like finding test files by searching for specific patterns, running the test suite to catch
+failures, then working through type errors by reading file context and applying the right fixes.
 
-#### 3. Comprehensive Instructions
+Good error handling makes the difference between great agents and average ones. Think about common
+failure scenarios and document how the agent should respond. When dependencies are missing, it
+should check config files. When import errors happen, it should look at the project structure. For
+permission issues, it should skip problem files and report back rather than crashing entirely.
 
-Provide detailed, step-by-step instructions:
+### Testing and validation
 
-```markdown
-## Process
+Before using any agent in the wild, test it thoroughly across different scenarios. Try it on sample
+projects with different structures and complexity levels. Make sure it can run multiple times
+without breaking things. Check edge cases like empty files, missing dependencies, and weird project
+setups. Keep an eye on performance to make sure it finishes in reasonable time, and always check
+that the agent's final reports are actually useful.
 
-1. **Discover test files**
-   - Search for `test_*.py` and `*_test.py` files
-   - Identify pytest configuration in `pyproject.toml` or `pytest.ini`
+### Naming convention
 
-2. **Run initial test suite**
-   - Execute `pytest` with coverage
-   - Capture failures and errors
-   - Note coverage percentage
+Agent names should be descriptive and action-focused, following the pattern of
+`{language/domain}-{action}-{target}`. Good examples include "python-ci-readiness",
+"javascript-test-generator", and "sql-query-optimiser". The name should immediately tell you what
+the agent does and what area it works in.
 
-3. **Fix type errors**
-   - Run `mypy` on all source files
-   - For each error:
-     - Read the file context
-     - Apply appropriate type hints
-     - Verify the fix doesn't break tests
-```
+## Command fundamentals
 
-#### 4. Error Handling
+Commands are slash commands that change how Claude Code behaves for specific workflows. Unlike
+agents that work on their own, commands run in the main context and let you interact throughout the
+process. Think of them as modes that shape how the assistant approaches and responds to requests.
 
-Anticipate and handle common failure scenarios:
+### Command file structure
 
-```markdown
-## Error Handling
-
-- **Missing dependencies**: Check pyproject.toml and requirements.txt
-- **Import errors**: Verify PYTHONPATH and package structure
-- **Permission denied**: Skip system files, report to user
-- **Syntax errors**: Report location, don't attempt to fix
-```
-
-#### 5. Tool Selection
-
-Only include tools the agent actually needs:
-
-```yaml
-# Minimal tools for a formatting agent
-tools: Read, Edit, MultiEdit
-
-# Full tools for a refactoring agent
-tools: Glob, Grep, Read, Edit, MultiEdit, Write, TodoWrite, LS
-```
-
-### Model Selection Strategy
-
-Choose the right model for the task complexity:
-
-#### Haiku (Fast, Lightweight)
-
-Perfect for deterministic, well-defined tasks:
-
-- Code formatting and linting
-- Simple find-and-replace operations
-- Running predefined test suites
-- Checking compliance with rules
-
-```yaml
-model: haiku
-```
-
-#### Opus (Sophisticated, Complex)
-
-Essential for tasks requiring deep reasoning:
-
-- Architectural decisions
-- Complex refactoring
-- Debugging subtle issues
-- Understanding business logic
-
-```yaml
-model: opus
-```
-
-#### Mixed Workflows
-
-Let Opus orchestrate whilst Haiku handles repetitive tasks:
-
-```markdown
-1. [Opus] Analyse architecture and plan refactoring
-2. [Haiku] Apply formatting to all files
-3. [Haiku] Update import statements
-4. [Opus] Verify logic preservation
-```
-
-### Testing Your Agent
-
-Before deploying an agent:
-
-1. **Test on sample projects** - Run against different codebases
-2. **Verify idempotency** - Running twice shouldn't break things
-3. **Check edge cases** - Empty files, missing dependencies, etc.
-4. **Monitor performance** - Ensure reasonable completion times
-5. **Review output quality** - Check the agent's reports are useful
-
-## Writing Commands
-
-Commands are slash commands that configure Claude Code's behaviour for specific workflows.
-
-### Command Structure
-
-Create a Markdown file in `commands/` directory:
+Commands are simpler than agents, needing only a Markdown file in the `commands/` directory that
+explains how behaviour changes:
 
 ```markdown
 # command-name.md
@@ -187,185 +124,85 @@ When the user says: "Write tests for this function"
 You should: [Specific action]
 ```
 
-### Command Design Principles
+### Command categories
 
-#### 1. Single Purpose
+Commands usually fall into a few broad categories. Development modes like `/test-driven`,
+`/debug-mode`, and `/performance-opt` change how the assistant approaches coding tasks. Code quality
+commands such as `/clean-code`, `/security-review`, and `/accessibility` focus the assistant on
+specific parts of code improvement. Documentation commands like `/write-docs`, `/api-docs`, and
+`/user-guide` tune the assistant for different types of writing tasks. Specialised workflows
+including `/migration`, `/review-pr`, and `/architecture` give focused expertise for particular
+scenarios.
 
-Each command should enable ONE specific workflow:
+## Writing effective commands
 
-**Good Examples:**
+### Command principles
 
-- `/write-docs` - Documentation writing mode
-- `/review-security` - Security audit mode
-- `/refactor-clean` - Clean code refactoring mode
+Like agents, commands work best when they have one clear purpose. A good command helps with one
+specific workflow rather than trying to cover multiple unrelated things. Commands like
+`/write-docs`, `/review-security`, and `/refactor-clean` work well because their scope is
+immediately obvious. Avoid broad, vague commands like `/do-everything` that don't give meaningful
+guidance.
 
-**Bad Example:**
+Be clear about how the command changes behaviour. Users should understand exactly what they're
+getting when they turn on a command. Say what the assistant will do differently, what it will focus
+on, and what it will avoid. For documentation commands, you might say that the assistant will write
+thorough docstrings for every public function, include usage examples in class docstrings, and add
+type hints to all parameters, whilst avoiding removing existing documentation or making unnecessary
+code changes.
 
-- `/do-everything` - Unclear, too broad
+Real examples help users understand how the command affects interactions. Show typical scenarios
+and how the assistant's responses change when the command is on. This helps users figure out
+whether a command will be useful for their current task and understand the assistant's thinking
+when it behaves differently than usual.
 
-#### 2. Clear Instructions
+Think about edge cases and document how the command handles weird situations. What happens when
+there's no existing documentation to work with? How does the command handle conflicting coding
+styles? What assumptions does it make about generated code or test files? Clear guidance prevents
+confusion and keeps behaviour consistent.
 
-Be explicit about behaviour changes:
+### Command naming
 
-```markdown
-When this command is active:
+Command names should be short and memorable, following patterns like `{action}-{target}` or
+`{mode}`. Examples include `/write-docs`, `/debug-mode`, and `/clean-code`. The name should be easy
+to type and remember whilst clearly showing what the command does.
 
-## DO
-- Write comprehensive docstrings for every public function
-- Include usage examples in class docstrings
-- Add type hints to all parameters
+## Documentation standards
 
-## DON'T
-- Don't remove existing documentation
-- Don't change code logic
-- Don't add unnecessary comments
-```
+### For agents
 
-#### 3. Include Examples
+Agent documentation should cover five key areas that help users understand when and how to use them
+well. Clearly explain what the agent does and what problems it solves. Give specific triggers and
+example prompts that would naturally lead to using this agent. Document the step-by-step workflow
+the agent follows, including any tools it uses and how it makes decisions. Be honest about what the
+agent can't do, and describe what users can expect in the final report or output.
 
-Show typical usage scenarios:
+### For commands
 
-```markdown
-## Example Interactions
+Command documentation needs to explain how the assistant's behaviour changes when the command is
+on, describe the workflow or process the assistant will follow, give examples of how common
+interactions will work differently, and clarify any default assumptions or fallback behaviours the
+command relies on.
 
-User: "Document this class"
-Assistant: I'll add comprehensive Google-style docstrings with:
-- Class purpose and usage
-- Method documentation
-- Usage examples
-- Type hints
+## Advanced patterns
 
-User: "This needs better docs"
-Assistant: I'll enhance the existing documentation by:
-- Expanding descriptions
-- Adding parameter details
-- Including return value information
-```
+### Composable agents
 
-#### 4. Handle Edge Cases
+Well-designed agents can work together to handle complex, multi-step workflows. Think about how
+your agent fits into broader development processes and document which other agents work well with
+it. A test coverage analyst might work well after a CI readiness agent, whilst a docstring auditor
+might be most useful before running code quality checks.
 
-Anticipate what might go wrong:
+### Progressive enhancement
 
-```markdown
-## Edge Cases
+Some agents benefit from multiple modes that users can choose based on their needs and time limits.
+A basic mode might focus on formatting code and fixing obvious issues, whilst an advanced mode with
+a `--thorough` flag could include deep refactoring, architecture improvements, and performance
+tweaks. This approach lets users balance thoroughness against time constraints.
 
-- **No existing docstrings**: Create from scratch
-- **Conflicting styles**: Follow Google style
-- **Generated code**: Add minimal documentation
-- **Test files**: Use single-line docstrings
-```
+### Feedback loops
 
-### Command Categories
-
-Organise commands by their purpose:
-
-#### Development Modes
-
-- `/test-driven` - TDD workflow
-- `/debug-mode` - Systematic debugging
-- `/performance-opt` - Performance optimisation
-
-#### Code Quality
-
-- `/clean-code` - Refactoring for cleanliness
-- `/security-review` - Security audit mode
-- `/accessibility` - A11y improvements
-
-#### Documentation
-
-- `/write-docs` - Documentation mode
-- `/api-docs` - API documentation
-- `/user-guide` - User-facing docs
-
-#### Specialised Workflows
-
-- `/migration` - Code migration assistance
-- `/review-pr` - Pull request review mode
-- `/architecture` - Architectural decisions
-
-## Naming Conventions
-
-### Agents
-
-Use descriptive, action-oriented names:
-
-- Format: `{language/domain}-{action}-{target}`
-- Examples: `python-ci-readiness`, `javascript-test-generator`, `sql-query-optimiser`
-
-### Commands
-
-Use concise, memorable names:
-
-- Format: `{action}-{target}` or `{mode}`
-- Examples: `/write-docs`, `/debug-mode`, `/clean-code`
-
-## Documentation Standards
-
-### For Agents
-
-Document:
-
-1. **Purpose** - What the agent does
-2. **When to use** - Clear triggers
-3. **Process** - Step-by-step workflow
-4. **Limitations** - What it won't do
-5. **Output** - What to expect
-
-### For Commands
-
-Document:
-
-1. **Mode** - How behaviour changes
-2. **Workflow** - The process to follow
-3. **Examples** - Common interactions
-4. **Defaults** - Standard assumptions
-
-## Contributing
-
-When contributing new agents or commands:
-
-1. **Check existing tools** - Avoid duplication
-2. **Follow conventions** - Match the existing style
-3. **Test thoroughly** - Verify on multiple scenarios
-4. **Document clearly** - Help others understand
-5. **Consider maintenance** - Keep it simple
-
-## Advanced Patterns
-
-### Composable Agents
-
-Design agents that work well together:
-
-```markdown
-This agent works well with:
-- `test-coverage-analyst` - Run after to verify coverage
-- `docstring-auditor` - Run before to document code
-- `performance-profiler` - Run after optimisations
-```
-
-### Progressive Enhancement
-
-Start simple, add complexity gradually:
-
-```markdown
-## Basic Mode
-- Format code
-- Fix obvious issues
-
-## Advanced Mode (--thorough flag)
-- Deep refactoring
-- Architecture improvements
-- Performance optimisation
-```
-
-### Feedback Loops
-
-Include verification steps:
-
-```markdown
-After each change:
-1. Run tests to verify
-2. Check type hints still valid
-3. Ensure imports resolve
-4. Report any regressions
-```
+The best agents include checking steps that catch problems early and give confidence in their work.
+After making changes, an agent might run tests to check functionality, make sure type hints still
+work correctly, ensure imports still resolve properly, and report any regressions straight away.
+These feedback loops make agents more reliable and help users trust their output.
