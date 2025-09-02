@@ -142,3 +142,13 @@ If commit fails repeatedly, stop and explain the situation.
 **CRITICAL**: Never modify check-related config files (e.g. `.pre-commit-config.yaml`,
 `.markdownlint.yaml`) just to bypass failing checks. If linting or validation is
 blocking the commit, consult the user with the specific issues and how to proceed.
+
+### Common Markdown Issue: Indentation Problems
+
+MD029 (list numbering) and MD040 (code block language) violations are usually
+caused by **indentation inconsistencies**, not actual numbering or language issues.
+
+Check with: `sed -n 'START,ENDp' file.md | cat -A` to see whitespace patterns.
+
+Fix by ensuring code block content indentation ≥ fence indentation. Don't renumber
+lists or hack around symptoms - fix the underlying indentation mismatch.
