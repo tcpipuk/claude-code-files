@@ -19,6 +19,31 @@ excellent writing that balances conciseness, clarity, and naturalness.
 - **Varied sentence structure**: Mix short punchy sentences with longer explanatory ones
 - **Active voice throughout**: "Install the package" not "The package should be installed"
 
+### Humble expertise
+
+- **Share experience, not authority**: "Here's what I've learned" not "This guide will teach you"
+- **Colleague, not professor**: Write like you're sharing notes with a peer who asked for help
+- **Practical, not promotional**: Focus on what's needed for the task, skip the "endless possibilities"
+- **Include basics, skip edge cases**: A sentence for newbies costs nothing; paragraphs on rare
+  scenarios dilute focus
+- **Signpost, don't elaborate**: "If you need auth, look into OAuth" not a security dissertation
+
+### Tone shift examples
+
+- ❌ "This guide shows you how to master..." → ✅ "Here's how I set up..."
+- ❌ "You must configure..." → ✅ "You'll need to configure..."
+- ❌ "The real power lies in..." → ✅ "The interesting bit is..."
+- ❌ "Always ensure..." → ✅ "Make sure to..."
+- ❌ "This enables endless possibilities" → ✅ "This lets you add other features"
+
+### Proportional coverage
+
+- **Basics**: Quick explanation helps everyone get started (costs maybe 2 lines)
+- **Common tasks**: The meat of your document - what most people actually need
+- **Advanced topics**: A mention and pointer, not a tutorial ("For production use, consider adding authentication")
+- **Edge cases**: Only if they're truly gotchas, otherwise skip entirely
+- **Kitchen-sink free**: Your document should do one thing well, not try to be everything
+
 ### Conciseness without dumbing down
 
 - Remove filler words: "in order to" → "to", "due to the fact that" → "because"
