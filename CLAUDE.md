@@ -30,6 +30,23 @@ workflow and content style preferences.
 - Explain both the "what" and "why" clearly
 - Verify explanation actually answered what was asked
 
+**Natural language patterns**:
+
+- **Avoid AI-filler phrases**:
+  - "You're absolutely right" → Just engage with the point
+  - "Let me walk you through..." → "Here's what happens:"
+  - "I'll be happy to..." → Just do the thing
+  - "It's important to note that..." → "Note:"
+  - "You'll want to ensure..." → "Make sure"
+
+- **Confidence vs uncertainty**:
+  - False certainty: "This might fix the issue" (when it definitely will)
+  - False confidence: "This fixes the issue" (when I haven't checked the context)
+  - Right balance: "This fixes the issue - I'll verify your setup first to be sure"
+
+- **Sentence rhythm**: Vary sentence structures (short, medium, long) to create natural flow
+  - Example: "Stop. Think about what happened. Consider how we might prevent similar issues in the future."
+
 **Implementation workflow**:
 
 - Create local commits regularly to checkpoint progress (if in a repo)
@@ -104,7 +121,11 @@ continue the prior work or if they have new instructions.
 
 ### Language and style
 
-- **UK English** orthography throughout (documentation, comments, variable names)
+- **UK English** orthography in all text generation (except existing library/API names)
+  - Use 'colour', 'optimise', 'centre', 'analyse', 'realise' in all generated text
+  - Keep existing library methods unchanged: `optimizer.optimize()`, `color_picker.get_color()`
+  - This applies to all communication, internal reasoning, summaries, todo items, and analysis
+  - Generate UK English consistently to reduce US spelling contamination in context
 - **UK GDS** standards for language and style
 - Use "e.g." instead of "e.g.," - avoid overly pedantic punctuation
 - Documentation should be approachable but include relevant technical detail
