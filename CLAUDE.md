@@ -47,18 +47,20 @@ workflow and content style preferences.
 - **Sentence rhythm**: Vary sentence structures (short, medium, long) to create natural flow
   - Example: "Stop. Think about what happened. Consider how we might prevent similar issues in the future."
 
-**Implementation workflow**:
-
-- Create local commits regularly to checkpoint progress (if in a repo)
-- If something fails repeatedly, stop and ask rather than retrying endlessly
-
 ### Solution trade-offs
 
 - Present options when there's a meaningful choice: "quick hack" vs "proper solution"
 - Be honest about pros/cons: maintainability, performance, technical debt
 - Default to best practice, but explain when cutting corners makes sense
 
-### Code quality
+### Implementation workflow
+
+- Create local commits regularly to checkpoint progress (if in a repo)
+- If something fails repeatedly, stop and ask rather than retrying endlessly
+
+## Code and documentation standards
+
+### Core principles
 
 - Code should always follow KISS, DRY, SOLID, and YAGNI principles
 - Prefer composition over inheritance, use dependency injection
@@ -66,38 +68,6 @@ workflow and content style preferences.
 - All public functions and methods must have complete type annotations
 - **Always leave the codebase cleaner than you found it** - Remove dead code, fix warnings,
   improve documentation as you work
-
-### Problem-solving and tool usage
-
-- **Root cause analysis**: Focus on identifying underlying causes rather than superficial
-  workarounds
-- **Verify before claiming success**: Always check actual state (git status, ls, cat) rather than
-  assuming operations succeeded
-  - "Measure twice, cut once" - verification commands are free but assumptions are expensive
-  - After git operations, ALWAYS run `git status` to confirm actual state
-- **Edit tool precision**: When using Edit/Replace tools, ensure `old_string` matches exactly
-  including whitespace - verify the outcome immediately
-- **Stuck/repeated failures**: If a tool call fails twice or you're unsure how to proceed, stop and
-  explain the situation
-- **Ambiguity**: If a request requires significant interpretation, clarify before taking action
-- **Command timeouts**: Use timeouts on commands that might hang - `timeout 30s curl` or
-  `curl --max-time 30`
-- **Avoid over-piping**: Complex pipe chains lose all output on failure - save intermediates to
-  `./tmp/` instead
-
-### Task management with TodoWrite
-
-**Critical for context retention**: The TodoWrite tool is essential - conversation history gets
-auto-compacted, so todos are your reliable memory across sessions. Use it to:
-
-- Track what's done and what's left when context gets shortened
-- Stay grounded when pre-commit hooks send you down rabbit holes
-- Maintain clear progress records: "Tick, that's done - onto the next job!"
-- **Add issues found during linting/testing and work through systematically**
-
-**Resuming tasks after tangents**: If the conversation shifts to a new topic or task, do not
-automatically resume the previous task. Instead, explicitly ask the user if they are ready to
-continue the prior work or if they have new instructions.
 
 ## The Zen of Python
 
@@ -121,7 +91,19 @@ continue the prior work or if they have new instructions.
 > If the implementation is easy to explain, it may be a good idea.
 > Namespaces are one honking great idea -- let's do more of those!
 
-## Documentation and code standards
+### Package structure
+
+- Create clean, organised modules with logical submodules
+- Pattern: `package/submodule/specific_module.py`
+- Break modules exceeding ~500 lines or with multiple responsibilities
+- Each module should have a single, clear purpose
+
+### Docstrings (Google style)
+
+- All public modules, classes, and functions must have docstrings
+- Format: 3-5 line paragraphs describing purpose and behaviour
+- **Never include Args sections** - parameters are self-documenting via type hints
+- Include Returns/Raises/Yields only when method directly performs these actions
 
 ### Language and style
 
@@ -133,22 +115,6 @@ continue the prior work or if they have new instructions.
 - **UK GDS** standards for language and style
 - Use "e.g." instead of "e.g.," - avoid overly pedantic punctuation
 - Documentation should be approachable but include relevant technical detail
-
-### Code organisation
-
-**Package structure**:
-
-- Create clean, organised modules with logical submodules
-- Pattern: `package/submodule/specific_module.py`
-- Break modules exceeding ~500 lines or with multiple responsibilities
-- Each module should have a single, clear purpose
-
-**Docstrings** (Google style):
-
-- All public modules, classes, and functions must have docstrings
-- Format: 3-5 line paragraphs describing purpose and behaviour
-- **Never include Args sections** - parameters are self-documenting via type hints
-- Include Returns/Raises/Yields only when method directly performs these actions
 
 ### Markdown documentation
 
@@ -162,11 +128,62 @@ continue the prior work or if they have new instructions.
 
 **Organisation**:
 
-- Follow KISS and DRY principles - consolidate repeated content and link to it
+- Consolidate repeated content and link to it
 - Keep README.md tidy with links to detailed documentation in `./docs/`
 - Store extensive documentation in `./docs/` rather than cluttering README
 - Prefer flat structure over deep hierarchies
 - Remove redundant navigation sections if they duplicate other content
+
+## Problem-solving and tool usage
+
+### Root cause analysis
+
+- Focus on identifying underlying causes rather than superficial workarounds
+
+### Verification and validation
+
+- **Verify before claiming success**: Always check actual state (git status, ls, cat) rather than
+  assuming operations succeeded
+  - "Measure twice, cut once" - verification commands are free but assumptions are expensive
+  - After git operations, ALWAYS run `git status` to confirm actual state
+- **Edit tool precision**: When using Edit/Replace tools, ensure `old_string` matches exactly
+  including whitespace - verify the outcome immediately
+
+### Tool-specific patterns
+
+- **Stuck/repeated failures**: If a tool call fails twice or you're unsure how to proceed, stop and
+  explain the situation
+- **Ambiguity**: If a request requires significant interpretation, clarify before taking action
+- **Command timeouts**: Use timeouts on commands that might hang - `timeout 30s curl` or
+  `curl --max-time 30`
+- **Avoid over-piping**: Complex pipe chains lose all output on failure - save intermediates to
+  `./tmp/` instead
+
+## Task management with TodoWrite
+
+**Critical for context retention**: The TodoWrite tool is essential - conversation history gets
+auto-compacted, so todos are your reliable memory across sessions. Use it to:
+
+- Track what's done and what's left when context gets shortened
+- Stay grounded when pre-commit hooks send you down rabbit holes
+- Maintain clear progress records: "Tick, that's done - onto the next job!"
+- **Add issues found during linting/testing and work through systematically**
+
+**Resuming tasks after tangents**: If the conversation shifts to a new topic or task, do not
+automatically resume the previous task. Instead, explicitly ask the user if they are ready to
+continue the prior work or if they have new instructions.
+
+### Plan mode and ExitPlanMode
+
+When plan mode is active, the ExitPlanMode tool appears - signalling careful orchestration is
+required before execution. Following "measure twice, cut once" principles:
+
+- **Plan requirements**: Not exhaustive code dumps, but detailed enough to show understanding
+  - Include specific line numbers when identifying changes
+  - Explain *what* changes you'll make and *why*
+  - Demonstrate understanding of the purpose, not just mechanical changes
+- **Approval workflow**: Present comprehensive plan via ExitPlanMode → User approves → Execute
+- **Plan mode signals**: User wants methodical planning before any system modifications
 
 ## Git and version control
 
@@ -193,23 +210,6 @@ continue the prior work or if they have new instructions.
 - If hooks make changes, the commit may not complete - verify with `git status`
 - Modified files need to be staged again before the commit can succeed
 
-## Agents vs Commands
-
-### Agents (`/root/.claude/agents/`)
-
-Autonomous workers launched via Task tool that run outside your context window using separate models
-(often faster/cheaper). They cannot interact with the user mid-task and return a final report. Ideal
-for heavy analysis or repetitive tasks.
-
-You can pass extra instructions when launching: `Task tool with "docstring-auditor" + "Focus on UK
-spelling in ./docs/"`.
-
-### Commands (`/root/.claude/commands/`)
-
-Slash commands like `/truenas-mode` that add instructions to your current conversation. They set
-specialist modes, enable interactive workflows, or guide specific tasks. Run in main context,
-allowing user interaction and clarification throughout.
-
 ## Testing standards
 
 ### Pytest conventions
@@ -221,9 +221,28 @@ Never use plain `assert` statements in tests. Always use pytest's assertion meth
 - `pytest.approx()` for floating-point comparisons
 - `pytest.mark.parametrize()` for parametrised tests
 
-## Working directories
+## Reference sections
 
-### Local investigation directory
+### Agents vs Commands
+
+#### Agents (`/root/.claude/agents/`)
+
+Autonomous workers launched via Task tool that run outside your context window using separate models
+(often faster/cheaper). They cannot interact with the user mid-task and return a final report. Ideal
+for heavy analysis or repetitive tasks.
+
+You can pass extra instructions when launching: `Task tool with "docstring-auditor" + "Focus on UK
+spelling in ./docs/"`.
+
+#### Commands (`/root/.claude/commands/`)
+
+Slash commands like `/truenas-mode` that add instructions to your current conversation. They set
+specialist modes, enable interactive workflows, or guide specific tasks. Run in main context,
+allowing user interaction and clarification throughout.
+
+### Working directories
+
+#### Local investigation directory
 
 For temporary files, external repository clones, or other investigative purposes, use the `./tmp/`
 directory. This directory is typically ignored by Git and will not be included in commits.
@@ -235,3 +254,19 @@ ls ./tmp/repo_name
 ```
 
 **Note**: Clean up after yourself - test/temp files should be deleted after use.
+
+#### Docker containers for testing
+
+For isolated testing environments, use Docker containers with pre-configured build tools:
+
+- Available images: `git.tomfos.tr/tom/act-runner:{ubuntu-rolling,fedora-rawhide,debian-sid}`
+- Include rustup, compilers, and various build tools pre-installed
+- Quick testing without polluting the host OS
+
+```bash
+# Example: Test Python code in isolated environment
+docker run --rm -it -v $(pwd):/workspace git.tomfos.tr/tom/act-runner:ubuntu-rolling
+```
+
+**Important**: If creating persistent containers (without `--rm`), add a TodoWrite reminder to stop
+and remove the container when finished to avoid resource waste.
