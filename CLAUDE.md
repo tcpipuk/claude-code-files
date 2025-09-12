@@ -118,29 +118,18 @@ workflow and content style preferences.
 
 ### Markdown documentation
 
-**Structure**:
+Follow markdownlint standards with 100-character line wrapping (except tables/code blocks). Use
+sentence case for headings: "Getting started" not "Getting Started". Maximum 3 heading levels -
+use **bold text** for emphasis beyond that. Don't number headings.
 
-- Follow markdownlint standards
-- Line-wrap at 100 characters (except tables and code blocks)
-- Use sentence case for all headings: "Getting started" not "Getting Started"
-- Maximum 3 heading levels (# ## ###) - use **bold text** for emphasis beyond that
-- Don't number headings (### 1. Thing) - just use ### Thing
+Consolidate repeated content and link to it. Keep README.md tidy with links to detailed
+documentation in `./docs/`. Store extensive documentation in `./docs/` rather than cluttering
+README. Prefer flat structure over deep hierarchies. Remove redundant navigation sections if they
+duplicate other content.
 
-**Organisation**:
+## Verification and validation
 
-- Consolidate repeated content and link to it
-- Keep README.md tidy with links to detailed documentation in `./docs/`
-- Store extensive documentation in `./docs/` rather than cluttering README
-- Prefer flat structure over deep hierarchies
-- Remove redundant navigation sections if they duplicate other content
-
-## Problem-solving and tool usage
-
-### Root cause analysis
-
-- Focus on identifying underlying causes rather than superficial workarounds
-
-### Verification and validation
+- **Root cause focus**: Identify underlying causes rather than superficial workarounds
 
 - **Verify before claiming success**: Always check actual state (git status, ls, cat) rather than
   assuming operations succeeded
@@ -149,7 +138,7 @@ workflow and content style preferences.
 - **Edit tool precision**: When using Edit/Replace tools, ensure `old_string` matches exactly
   including whitespace - verify the outcome immediately
 
-### Tool-specific patterns
+## Tool usage patterns
 
 - **Stuck/repeated failures**: If a tool call fails twice or you're unsure how to proceed, stop and
   explain the situation
@@ -221,28 +210,22 @@ Never use plain `assert` statements in tests. Always use pytest's assertion meth
 - `pytest.approx()` for floating-point comparisons
 - `pytest.mark.parametrize()` for parametrised tests
 
-## Reference sections
+## Agents vs commands
 
-### Agents vs Commands
+**Agents** (`/root/.claude/agents/`): Autonomous workers launched via Task tool that run outside
+your context window using separate models (often faster/cheaper). They cannot interact with the
+user mid-task and return a final report. Ideal for heavy analysis or repetitive tasks.
 
-#### Agents (`/root/.claude/agents/`)
+You can pass extra instructions when launching: `Task tool with "docstring-auditor" + "Focus on
+UK spelling in ./docs/"`.
 
-Autonomous workers launched via Task tool that run outside your context window using separate models
-(often faster/cheaper). They cannot interact with the user mid-task and return a final report. Ideal
-for heavy analysis or repetitive tasks.
+**Commands** (`/root/.claude/commands/`): Slash commands like `/truenas-mode` that add instructions
+to your current conversation. They set specialist modes, enable interactive workflows, or guide
+specific tasks. Run in main context, allowing user interaction and clarification throughout.
 
-You can pass extra instructions when launching: `Task tool with "docstring-auditor" + "Focus on UK
-spelling in ./docs/"`.
+## Working directories
 
-#### Commands (`/root/.claude/commands/`)
-
-Slash commands like `/truenas-mode` that add instructions to your current conversation. They set
-specialist modes, enable interactive workflows, or guide specific tasks. Run in main context,
-allowing user interaction and clarification throughout.
-
-### Working directories
-
-#### Local investigation directory
+**Local investigation directory**:
 
 For temporary files, external repository clones, or other investigative purposes, use the `./tmp/`
 directory. This directory is typically ignored by Git and will not be included in commits.
@@ -255,9 +238,8 @@ ls ./tmp/repo_name
 
 **Note**: Clean up after yourself - test/temp files should be deleted after use.
 
-#### Docker containers for testing
-
-For isolated testing environments, use Docker containers with pre-configured build tools:
+**Docker containers for testing**: For isolated testing environments, use Docker containers with
+pre-configured build tools:
 
 - Available images: `git.tomfos.tr/tom/act-runner:{ubuntu-rolling,fedora-rawhide,debian-sid}`
 - Include rustup, compilers, and various build tools pre-installed
