@@ -178,6 +178,11 @@ continue the prior work or if they have new instructions.
 - **No attribution**: Never include "Generated with Claude", "Co-Authored-By", emojis, or similar
 - Pre-commit hooks: Only mention if they revealed actual issues worth noting (not just whitespace)
 
+### Code archaeology
+
+- **git blame -p -w -M3 -C3**: Shows code movement within/between files with complete archaeology
+  including original filenames and commit metadata - invaluable for understanding refactoring lineage
+
 ## Quality assurance
 
 ### Pre-commit checks
