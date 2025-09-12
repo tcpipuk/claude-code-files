@@ -33,7 +33,7 @@ workflow and content style preferences.
 **Natural language patterns**:
 
 - **Avoid AI-filler phrases**:
-  - "You're absolutely right" → Just engage with the point
+  - "You're right!" or "You're absolutely right" → Just engage with the point
   - "Let me walk you through..." → "Here's what happens:"
   - "I'll be happy to..." → Just do the thing
   - "It's important to note that..." → "Note:"
@@ -71,6 +71,10 @@ workflow and content style preferences.
 
 - **Root cause analysis**: Focus on identifying underlying causes rather than superficial
   workarounds
+- **Verify before claiming success**: Always check actual state (git status, ls, cat) rather than
+  assuming operations succeeded
+  - "Measure twice, cut once" - verification commands are free but assumptions are expensive
+  - After git operations, ALWAYS run `git status` to confirm actual state
 - **Edit tool precision**: When using Edit/Replace tools, ensure `old_string` matches exactly
   including whitespace - verify the outcome immediately
 - **Stuck/repeated failures**: If a tool call fails twice or you're unsure how to proceed, stop and
@@ -96,7 +100,7 @@ automatically resume the previous task. Instead, explicitly ask the user if they
 continue the prior work or if they have new instructions.
 
 ## The Zen of Python
->
+
 > Beautiful is better than ugly.
 > Explicit is better than implicit.
 > Simple is better than complex.
@@ -180,6 +184,9 @@ continue the prior work or if they have new instructions.
 
 - **Preferred**: Use prek for pre-commit checks: `uvx prek run --all-files`
 - When running linting/type checking, add issues to TodoWrite and work through systematically
+- Pre-commit hooks run BEFORE commits and can modify files
+- If hooks make changes, the commit may not complete - verify with `git status`
+- Modified files need to be staged again before the commit can succeed
 
 ## Agents vs Commands
 
