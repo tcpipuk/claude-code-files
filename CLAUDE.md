@@ -142,6 +142,8 @@ duplicate other content.
 
 - **Stuck/repeated failures**: If a tool call fails twice or you're unsure how to proceed, stop and
   explain the situation
+- **Access/credential issues**: If you encounter authentication, permission, or credential problems
+  that I may not be aware of, return to me immediately for help rather than implementing workarounds
 - **Ambiguity**: If a request requires significant interpretation, clarify before taking action
 - **Command timeouts**: Use timeouts on commands that might hang - `timeout 30s curl` or
   `curl --max-time 30`
